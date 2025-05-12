@@ -1,75 +1,53 @@
+
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const app = express();
-// const PORT = 5000;
 
+const app = express();
+
+// Middlewares
 app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB connection URI
-const uri = "mongodb+srv://Dhanush6371:Dhanush2002@cluster0.kozns.mongodb.net/Dhanush6371?retryWrites=true&w=majority";
-
-// Connect to MongoDB
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('✅ Connected to MongoDB'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
-
-// Define a schema
-const waitlistSchema = new mongoose.Schema({
-  email: { type: String, required: true },
-  packageType: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-});
-
-// Create a model
-const Waitlist = mongoose.model('Waitlist', waitlistSchema);
-
-// POST /details endpoint
+// POST /details — Save user email and package type (just log to console)
 app.post('/details', async (req, res) => {
-  const { email, package: packageType } = req.body;
+    const { email, package: packageType } = req.body;
 
-  if (!email || !packageType) {
-    return res.status(400).json({ error: 'Email and package type are required.' });
-  }
+    if (!email || !packageType) {
+        return res.status(400).json({ error: 'Email and package type are required.' });
+    }
 
-  try {
-    // Save to MongoDB
-    const newEntry = new Waitlist({ email, packageType });
-    await newEntry.save();
-
-    console.log('✅ Details saved to MongoDB:', { email, packageType });
-
-    res.status(200).json({ message: 'Details received and saved successfully.' });
-  } catch (error) {
-    console.error('❌ Error saving to MongoDB:', error);
-    res.status(500).json({ error: 'Failed to save details.' });
-  }
+    try {
+        const newEntry = {
+            email,
+            packageType,
+            createdAt: new Date()
+        };
+        console.log('✅ Received details (not saved to DB):', newEntry);
+        res.status(200).json({ message: 'Details received (not saved to DB, just logged).', data: newEntry });
+    } catch (error) {
+        console.error('❌ Error processing request:', error);
+        res.status(500).json({ error: 'Failed to process details.' });
+    }
 });
 
-
-// GET /details endpoint to fetch all waitlist entries
+// GET /details — Return a mock response since we're not using a database
 app.get('/details', async (req, res) => {
-  try {
-    const waitlistEntries = await Waitlist.find().sort({ createdAt: -1 });
-    res.status(200).json(waitlistEntries);
-  } catch (error) {
-    console.error('❌ Error fetching data from MongoDB:', error);
-    res.status(500).json({ error: 'Failed to fetch details.' });
-  }
+    try {
+        console.log('ℹ️ GET /details called - no data stored in DB');
+        res.status(200).json({ message: 'No database connection - this endpoint would normally return waitlist entries.' });
+    } catch (error) {
+        console.error('❌ Error in GET /details:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
-
-// Start the server
+// const PORT = process.env.PORT || 5000;
 // app.listen(PORT, () => {
-//   console.log(`🚀 Server running on http://localhost:${PORT}`);
+//     console.log(`🚀 Server running on http://localhost:${PORT}`);
 // });
 
-connectToMongo();
-
 module.exports = app;
-
 
 
 

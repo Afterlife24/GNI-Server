@@ -148,6 +148,12 @@ app.post('/check-email', async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required.' });
 
+    // Add this check
+    if (!db) {
+        console.error('Database not connected');
+        return res.status(503).json({ error: 'Database not connected. Please try again.' });
+    }
+
     try {
         const collection = db.collection('packageSubmissions');
         const existingUser = await collection.findOne({ email });
@@ -157,7 +163,10 @@ app.post('/check-email', async (req, res) => {
         });
     } catch (error) {
         console.error('❌ Error checking email:', error);
-        return res.status(500).json({ error: 'Failed to check email.' });
+        return res.status(500).json({ 
+            error: 'Failed to check email.',
+            details: error.message // Include error message for debugging
+        });
     }
 });
 

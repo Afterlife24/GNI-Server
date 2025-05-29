@@ -114,19 +114,19 @@ const savedOTPS = {};
 
 // CORS configuration
 const corsOptions = {
-    origin: (origin, callback) => {
-        const allowedOrigins = [
-            'http://yourfrontenddomain.com',
-            'https://yourfrontenddomain.com',
-            'https://0a60-2409-40f0-5041-a94c-4441-3cb2-e9aa-3502.ngrok-free.app',
-            'http://localhost:3000'
-        ];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    // origin: (origin, callback) => {
+    //     const allowedOrigins = [
+    //         'http://yourfrontenddomain.com',
+    //         'https://yourfrontenddomain.com',
+    //         'https://c492-2409-40f0-5041-a94c-4441-3cb2-e9aa-3502.ngrok-free.app',
+    //         'http://localhost:3000'
+    //     ];
+    //     if (!origin || allowedOrigins.includes(origin)) {
+    //         callback(null, true);
+    //     } else {
+    //         callback(new Error('Not allowed by CORS'));
+    //     }
+    // },
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true

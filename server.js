@@ -112,21 +112,8 @@ const { MongoClient } = require('mongodb');
 const app = express();
 const savedOTPS = {};
 
-// CORS configuration
+// ✅ CORS configuration (allows all origins)
 const corsOptions = {
-    // origin: (origin, callback) => {
-    //     const allowedOrigins = [
-    //         'http://yourfrontenddomain.com',
-    //         'https://yourfrontenddomain.com',
-    //         'https://c492-2409-40f0-5041-a94c-4441-3cb2-e9aa-3502.ngrok-free.app',
-    //         'http://localhost:3000'
-    //     ];
-    //     if (!origin || allowedOrigins.includes(origin)) {
-    //         callback(null, true);
-    //     } else {
-    //         callback(new Error('Not allowed by CORS'));
-    //     }
-    // },
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -135,7 +122,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-// MongoDB connection
+// ✅ MongoDB connection
 const uri = "mongodb+srv://Dhanush2002:Dhanush2002@cluster0.ool5p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 let db;
 
@@ -149,11 +136,6 @@ async function connectToMongo() {
         await client.connect();
         db = client.db('Dhanush2002');
         console.log('✅ Connected to MongoDB');
-
-        // const PORT = 5000;
-        // app.listen(PORT, () => {
-        //     console.log(`🚀 Server running on http://localhost:${PORT}`);
-        // });
     } catch (err) {
         console.error('❌ Error connecting to MongoDB:', err);
         setTimeout(connectToMongo, 3000);
